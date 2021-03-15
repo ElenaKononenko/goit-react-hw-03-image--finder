@@ -25,7 +25,7 @@ class App extends Component {
     if (this.state.searchQuery !== prevState.searchQuery) {
       this.fetchGallery();
     }
-    console.log(this.state.gallery.length);
+
     window.scrollTo({
       top: document.documentElement.scrollHeight,
       behavior: 'smooth',
@@ -51,7 +51,6 @@ class App extends Component {
     pixabayApi
       .getFetch(option)
       .then(data => {
-        console.log('data', data);
         this.setState(prevState => ({
           gallery: [...prevState.gallery, ...data],
           page: prevState.page + 1,

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import s from './ImageGalleryItem.module.css';
-import noPoster from './noPoster.jpg';
+// import noPoster from './noPoster.jpg';
 
 class ImageGalleryItem extends Component {
   state = {};
   render() {
     const {
-      webformatURL = noPoster,
+      webformatURL,
       tags,
       largeImageURL,
       modalImg,
@@ -31,13 +31,11 @@ class ImageGalleryItem extends Component {
 }
 
 export default ImageGalleryItem;
-ImageGalleryItem.defaultProps = {
-  webformatURL: noPoster,
-};
+
 ImageGalleryItem.propTypes = {
   showModal: PropTypes.func.isRequired,
   modalImg: PropTypes.func.isRequired,
   largeImageURL: PropTypes.string.isRequired,
-  webformatURL: PropTypes.string,
+  webformatURL: PropTypes.string.isRequired,
   tags: PropTypes.string.isRequired,
 };
