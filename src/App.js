@@ -1,27 +1,35 @@
 import React, { Component } from 'react';
 import './index.css';
+import s from './App.module.css';
 import Loader from './components/Loader';
 import pixabayApi from './services/pixabayApi';
 import ImageGallery from './components/ImageGallery';
 import Searchbar from './components/Searchbar';
 import Button from './components/Button';
-
+import Modal from './components/Modal';
 class App extends Component {
   state = {
     gallery: [],
     searchQuery: '',
-    perPage: 3,
+    perPage: 12,
     page: 1,
+    data: [],
     isLoading: false,
     error: null,
     selectedImg: '',
+    showModal: false,
+    tags: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
-    // const { gallery, searchQuery, perPage, page } = this.state;
     if (this.state.searchQuery !== prevState.searchQuery) {
       this.fetchGallery();
     }
+    console.log(this.state.gallery.length);
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
   }
 
   handleChangeQuery = query => {
@@ -43,26 +51,69 @@ class App extends Component {
     pixabayApi
       .getFetch(option)
       .then(data => {
+        console.log('data', data);
         this.setState(prevState => ({
           gallery: [...prevState.gallery, ...data],
           page: prevState.page + 1,
+          data,
         }));
+        //можно еще так скролл сделать, но уже через стек с таймаутом
+        // setTimeout(() => {
+        //   window.scrollTo({
+        //     top: document.documentElement.scrollHeight,
+        //     behavior: 'smooth',
+        //   });
+        // }, 0);
       })
       .catch(error => this.state({ error }))
       .finally(() => this.setState({ isLoading: false }));
   };
 
+  toggleModal = () => {
+    this.setState({ showModal: !this.state.showModal });
+  };
+
+  handleModalImages = (img, tags) => {
+    this.setState({ selectedImg: img, tags });
+  };
+
   render() {
-    const { gallery, isLoading, error } = this.state;
+    const {
+      gallery,
+      isLoading,
+      error,
+      perPage,
+      data,
+      showModal,
+      selectedImg,
+      tags,
+    } = this.state;
+
     return (
-      <>
+      <div className={s.App}>
         <Searchbar onSubmit={this.handleChangeQuery} />
         {error && <h1>Введите запрос</h1>}
-
-        {!isLoading && <ImageGallery gallery={this.state.gallery} />}
+        {gallery.length ? (
+          <ImageGallery
+            gallery={this.state.gallery}
+            modalImg={this.handleModalImages}
+            showModal={this.toggleModal}
+          />
+        ) : (
+          <h1 style={{ textAlign: 'center', color: '#3f51b5' }}>
+            Введите запрос
+          </h1>
+        )}
+        {data.length === perPage && <Button onClick={this.fetchGallery} />}
         {isLoading && <Loader />}
-        {gallery.length > 0 && <Button onClick={this.fetchGallery} />}
-      </>
+        {showModal && (
+          <Modal
+            onClose={this.toggleModal}
+            selectedImg={selectedImg}
+            tags={tags}
+          />
+        )}
+      </div>
     );
   }
 }

@@ -10,20 +10,8 @@ const Button = ({ onClick }) => {
   );
 };
 
-window.scrollTo({
-  top: document.documentElement.scrollHeight,
-  behavior: 'smooth',
-});
-
 export default Button;
 
-// Button.propTypes = {
-//   onDeleteContact: PropTypes.func.isRequired,
-//   contacts: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       name: PropTypes.string.isRequired,
-//       number: PropTypes.string.isRequired,
-//       id: PropTypes.string.isRequired,
-//     }),
-//   ).isRequired,
-// };
+Button.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
