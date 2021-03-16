@@ -56,9 +56,7 @@ class App extends Component {
           page: prevState.page + 1,
           data,
         }));
-        console.log('data', data);
-        console.log(this.state.gallery);
-        console.log(Number(this.state.gallery.length) / Number(perPage));
+
         //можно еще так скролл сделать, но уже через стек с таймаутом
         // setTimeout(() => {
         //   window.scrollTo({
@@ -117,7 +115,9 @@ class App extends Component {
         )}
         {/* {fits(Number(this.state.gallery.length), Number(perPage)) &&
           !isLoading && <Button onClick={this.fetchGallery} />} */}
-        {data.length === perPage && <Button onClick={this.fetchGallery} />}
+        {data.length === perPage && !isLoading && (
+          <Button onClick={this.fetchGallery} />
+        )}
         {isLoading && <Loader />}
         {showModal && (
           <Modal
